@@ -18,7 +18,7 @@ export default class Home extends Component {
         >
           <Text style={styles.choiceText}>I'm a Motorist</Text>
           <Image
-            source={require("../images/passenger.png")}
+            source={require("../images/motorist.png")}
             style={styles.selectionImage}
           />
         </TouchableOpacity>
@@ -40,7 +40,7 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#3A3743"
+    backgroundColor: "#3C5580"
   },
   choiceText: {
     fontSize: 32,

@@ -24,17 +24,20 @@ BottomButton.propTypes = {
 
 const styles = StyleSheet.create({
   bottomButton: {
-    backgroundColor: "black",
+    backgroundColor: "#3C5580",
     marginTop: "auto",
     margin: 20,
     padding: 15,
     paddingLeft: 30,
     paddingRight: 30,
-    alignSelf: "center"
+    alignSelf: "center",
+    borderRadius: 10
   },
   bottomButtonText: {
     fontSize: 20,
-    color: "white",
+    color: "#ffa500",
     fontWeight: "600"
+    
+    
   }
 });

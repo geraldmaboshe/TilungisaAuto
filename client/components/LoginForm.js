@@ -69,12 +69,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     color: "#000000",
     marginBottom: 10,
-    fontFamily:"Arial"
+    fontFamily:"Arial",
+    borderRadius: 10
   },
   button: {
     backgroundColor: "#ffa500",
     paddingVertical: 10,
-    marginVertical: 10
+    marginVertical: 10,
+    borderRadius: 10
   },
   buttonText: {
     textAlign: "center",
@@ -88,7 +90,7 @@ const styles = StyleSheet.create({
       height: 70,
       marginLeft:"auto",
       marginRight: "auto",
-      marginBottom: 20  
+      marginBottom: 60  
   },
   orText:{
     textAlign:"center",

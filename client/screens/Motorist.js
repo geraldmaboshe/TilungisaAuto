@@ -192,17 +192,18 @@ export default class Passenger extends Component {
 
 const styles = StyleSheet.create({
   findDriver: {
-    backgroundColor: "black",
+    backgroundColor: "#3C5580",
     marginTop: "auto",
     margin: 20,
     padding: 15,
     paddingLeft: 30,
     paddingRight: 30,
-    alignSelf: "center"
+    alignSelf: "center",
+    borderRadius: 10
   },
   findDriverText: {
     fontSize: 20,
-    color: "white",
+    color: "#ffa500",
     fontWeight: "600"
   },
   suggestions: {
