@@ -69,7 +69,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#3A3743"
+    backgroundColor: "#3c5580"
   },
   errorMessage: {
     marginHorizontal: 10,
