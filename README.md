@@ -12,6 +12,7 @@
 - cd client && npm install
 - ```yarn run start```
 - ```react-native run-android```
-
+## Login Page
 ![Screenshot1](Login.png)
+## Motorist Home Page
 ![Screenshot2](MotoristHome.png)
