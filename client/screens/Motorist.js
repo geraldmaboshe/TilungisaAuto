@@ -15,12 +15,12 @@ import socketIO from "socket.io-client";
 import BottomButton from "../components/BottomButton";
 import Geolocation from '@react-native-community/geolocation';
 
-export default class Passenger extends Component {
+export default class Motorist extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lookingForDriver: false,
-      driverIsOnTheWay: false,
+      lookingForMechanic: false,
+      mechanicIsOnTheWay: false,
       predictions: [],
       mechanicLocation: null
     };
@@ -48,28 +48,26 @@ export default class Passenger extends Component {
     }
   }
 
-  async requestDriver() {
-    this.setState({ lookingForDriver: true });
+  async requestMechanic() {
+    this.setState({ lookingForMechanic: true });
     var socket = socketIO.connect("http://192.168.43.178:3000");
 
     socket.on("connect", () => {
       console.log("client connected");
-      //Request a taxi!
-      socket.emit("taxiRequest", this.props.routeResponse);
+ 
+      socket.emit("repairRequest", this.props.routeResponse);
       socket.emit("MechanicRequest", {latitude:this.props.latitude,longitude:this.props.longitude});
       this.setState({mechanicLocation: {latitude:this.props.latitude,longitude:this.props.longitude}})
     });
 
-    socket.on("driverLocation", driverLocation => {
-      console.log('point cordinates', driverLocation)
-      const pointCoords = [...this.props.pointCoords, driverLocation];
-      // this.map.fitToCoordinates(pointCoords, {
-      //   edgePadding: { top: 140, bottom: 140, left: 20, right: 20 }
-      // });
+    socket.on("mechanicLocation", mechanicLocation => {
+      console.log('point cordinates', mechanicLocation)
+      const pointCoords = [...this.props.pointCoords, mechanicLocation];
+    
       this.setState({
-        lookingForDriver: false,
-        driverIsOnTheWay: true,
-        driverLocation: driverLocation
+        lookingForMechanic: false,
+        mechanicIsOnTheWay: true,
+        mechanicLocation: mechanicLocation
       });
     });
   }
@@ -79,15 +77,15 @@ export default class Passenger extends Component {
   }
   render() {
     let marker = null;
-    let getDriver = null;
-    let findingDriverActIndicator = null;
-    let driverMarker = null;
+    let getMechanic = null;
+    let findingMechanicActIndicator = null;
+    let mechanicMarker = null;
 
     if (!this.props.latitude) return null;
 
-    if (this.state.driverIsOnTheWay) {
-      driverMarker = (
-        <Marker coordinate={this.state.driverLocation}>
+    if (this.state.mechanicIsOnTheWay) {
+      mechanicMarker = (
+        <Marker coordinate={this.state.mechanicLocation}>
           {/* <Image
             source={require("../images/carIcon.png")}
             style={{ width: 40, height: 40 }}
@@ -96,11 +94,11 @@ export default class Passenger extends Component {
       );
     }
 
-    if (this.state.lookingForDriver) {
-      findingDriverActIndicator = (
+    if (this.state.lookingForMechanic) {
+      findingMechanicActIndicator = (
         <ActivityIndicator
           size="large"
-          animating={this.state.lookingForDriver}
+          animating={this.state.lookingForMechanic}
         />
       );
     }
@@ -111,12 +109,12 @@ export default class Passenger extends Component {
           coordinate={this.props.pointCoords[this.props.pointCoords.length - 1]}
         />
       );
-      getDriver = (
+      getMechanic = (
         <BottomButton
-          onPressFunction={() => this.requestDriver()}
+          onPressFunction={() => this.requestMechanic()}
           buttonText="Accepting request"
         >
-          {findingDriverActIndicator}
+          {findingMechanicActIndicator}
         </BottomButton>
       );ss
     }
@@ -164,26 +162,15 @@ export default class Passenger extends Component {
             strokeColor="red"
           />
           {marker}
-          {driverMarker}
+          {mechanicMarker}
         </MapView>
-        {/* <TextInput
-          placeholder="Enter destination..."
-          style={styles.destinationInput}
-          value={this.state.destination}
-          clearButtonMode="always"
-          onChangeText={destination => {
-            console.log(destination);
-            this.setState({ destination });
-            this.onChangeDestinationDebounced(destination);
-          }}
-        /> */}
-        {/* {predictions} */}
-        {getDriver}
+        
+        {getMechanic}
         <BottomButton
-          onPressFunction={() => this.requestDriver()}
+          onPressFunction={() => this.requestMechanic()}
           buttonText="Accept request"
         >
-          {findingDriverActIndicator}
+          {findingMechanicActIndicator}
         </BottomButton>
       </View>
     );
@@ -191,7 +178,7 @@ export default class Passenger extends Component {
 }
 
 const styles = StyleSheet.create({
-  findDriver: {
+  findMechanic: {
     backgroundColor: "#3C5580",
     marginTop: "auto",
     margin: 20,
@@ -201,7 +188,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 10
   },
-  findDriverText: {
+  findMechanicText: {
     fontSize: 20,
     color: "#ffa500",
     fontWeight: "600"

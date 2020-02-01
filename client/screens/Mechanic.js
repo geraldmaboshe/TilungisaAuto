@@ -15,20 +15,20 @@ import socketIO from "socket.io-client";
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 import Geolocation from '@react-native-community/geolocation';
 
-export default class Driver extends Component {
+export default class Mechanic extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      lookingForPassengers: false,
-      driverLocation: null
+      lookingForMotorists: false,
+      mechanicLocation: null
     };
-    this.acceptPassengerRequest = this.acceptPassengerRequest.bind(this);
-    this.findPassengers = this.findPassengers.bind(this);
+    this.accetMotoristRequest = this.acceptMotoristRequest.bind(this);
+    this.findMotorists = this.findMotorists.bind(this);
     this.socket = null;
   }
 
   componentDidMount() {
-    // Alert.alert('DRIVER MOUNTED')
+   
     BackgroundGeolocation.configure({
       desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
       stationaryRadius: 50,
@@ -72,73 +72,63 @@ export default class Driver extends Component {
     });
   }
 
-  findPassengers() {
-    if (!this.state.lookingForPassengers) {
-      this.setState({ lookingForPassengers: true });
+  findMotorists() {
+    if (!this.state.lookingForMotorists) {
+      this.setState({ lookingForMotorists: true });
 
-      console.log(this.state.lookingForPassengers);
+      console.log(this.state.lookingForMotorists);
 
       this.socket = socketIO.connect("http://192.168.43.178:3000");
 
       this.socket.on("connect", () => {
-        this.socket.emit("passengerRequest");
+        this.socket.emit("motoristRequest");
       });
 
-      this.socket.on("taxiRequest", async routeResponse => {
+      this.socket.on("repairRequest", async routeResponse => {
         console.log(routeResponse);
         this.setState({
-          lookingForPassengers: false,
-          passengerFound: true,
+          lookingForMotosits: false,
+          motoristFound: true,
           routeResponse
         });
-        // await this.props.getRouteDirections(
-        //   routeResponse.geocoded_waypoints[0].place_id
-        // );
-        // this.map.fitToCoordinates(this.props.pointCoords, {
-        //   edgePadding: { top: 140, bottom: 140, left: 20, right: 20 }
-        // });
+   
       });
 
       this.socket.on("MechanicRequest", async routeResponse => {
         console.log(routeResponse);
         this.setState({
-          lookingForPassengers: false,
-          passengerFound: true,
+          lookingForMotorists: false,
+          motoristFound: true,
           routeResponse,
           mechanicLocation: routeResponse
         });
-        // await this.props.getRouteDirections(
-        //   routeResponse.geocoded_waypoints[0].place_id
-        // );
-        // this.map.fitToCoordinates(this.props.pointCoords, {
-        //   edgePadding: { top: 140, bottom: 140, left: 20, right: 20 }
-        // });
+       
       });
     }
   }
 
-  acceptPassengerRequest() {
-    const passengerLocation = this.props.pointCoords[
+  acceptMotoristRequest() {
+    const motoristLocation = this.props.pointCoords[
       this.props.pointCoords.length - 1
     ];
 
     Geolocation.getCurrentPosition(info => {
-      // console.log()
-      this.socket.emit("driverLocation", {
+    
+      this.socket.emit("mechanicLocation", {
         latitude: info.coords.latitude,
         longitude: info.coords.longitude
       });
     }, error => error, {timeout: 1000 * 30})
     BackgroundGeolocation.checkStatus(status => {
-      // you don't need to check status before start (this is just the example)
+      
       if (!status.isRunning) {
-        BackgroundGeolocation.start(); //triggers start on start event
+        BackgroundGeolocation.start(); 
       }
     });
 
     BackgroundGeolocation.on("location", location => {
-      //Send driver location to passenger
-      this.socket.emit("driverLocation", {
+   
+      this.socket.emit("mechanicLocation", {
         latitude: location.latitude,
         longitude: location.longitude
       });
@@ -156,7 +146,7 @@ export default class Driver extends Component {
       Linking.openURL(
         `geo:0,0?q=${this.state.mechanicLocation.latitude},${
           this.state.mechanicLocation.longitude
-        }(Passenger)`
+        }(Motorist)`
       );
     }
   }
@@ -164,25 +154,25 @@ export default class Driver extends Component {
   render() {
     let endMarker = null;
     let startMarker = null;
-    let findingPassengerActIndicator = null;
-    let passengerSearchText = "Find Mechanic";
-    let bottomButtonFunction = this.findPassengers;
+    let findingMotoristActIndicator = null;
+    let MotoristSearchText = "Find Mechanic";
+    let bottomButtonFunction = this.findMotorists;
     console.log('..........latitude test', this.props.latitude)
     if (!this.props.latitude) return null;
     console.log('..........passed latitude test')
-    if (this.state.lookingForPassengers) {
-      passengerSearchText = "Looking for Mechanic...";
-      findingPassengerActIndicator = (
+    if (this.state.lookingForMotorists) {
+      motoristSearchText = "Looking for Mechanic...";
+      findingMotoristActIndicator = (
         <ActivityIndicator
           size="large"
-          animating={this.state.lookingForPassengers}
+          animating={this.state.lookingForMotorists}
         />
       );
     }
 
-    if (this.state.passengerFound) {
-      passengerSearchText = "Mechanic Found! Book?";
-      bottomButtonFunction = this.acceptPassengerRequest;
+    if (this.state.motoristFound) {
+      motoristSearchText = "Mechanic Found! Book?";
+      bottomButtonFunction = this.acceptMotoristRequest;
     }
 
     if (this.props.pointCoords.length > 1) {
@@ -226,9 +216,9 @@ export default class Driver extends Component {
         </MapView>
         <BottomButton
           onPressFunction={bottomButtonFunction}
-          buttonText={passengerSearchText}
+          buttonText={motoristSearchText}
         >
-          {findingPassengerActIndicator}
+          {findingMotoristActIndicator}
         </BottomButton>
       </View>
     );
@@ -236,7 +226,7 @@ export default class Driver extends Component {
 }
 
 const styles = StyleSheet.create({
-  findDriver: {
+  findMechanic: {
     backgroundColor: "black",
     marginTop: "auto",
     margin: 20,
@@ -245,7 +235,7 @@ const styles = StyleSheet.create({
     paddingRight: 30,
     alignSelf: "center"
   },
-  findDriverText: {
+  findMechanicText: {
     fontSize: 20,
     color: "white",
     fontWeight: "600"

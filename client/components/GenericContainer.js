@@ -30,9 +30,9 @@ function genericContainer(WrappedComponent) {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           {
-            title: "Taxi App",
+            title: "Mobile Auto Repair",
             message:
-              "Taxi App needs to use your location to show routes and get taxis"
+              "Mobile Auto Repair Needs to use your location"
           }
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {

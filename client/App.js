@@ -6,8 +6,8 @@ import Login from "./screens/Login";
 import GenericContainer from "./components/GenericContainer";
 import Home from "./screens/Home";
 
-const DriverWithGenericContainer = GenericContainer(Mechanic);
-const PassengerWithGenericContainer = GenericContainer(Motorist);
+const MechanicWithGenericContainer = GenericContainer(Mechanic);
+const MotoristWithGenericContainer = GenericContainer(Motorist);
 
 export default class App extends Component {
   constructor(props) {
@@ -30,11 +30,11 @@ export default class App extends Component {
     }
 
     if (this.state.isMechanic) {
-      return <DriverWithGenericContainer token={this.state.token} />;
+      return <MechanicWithGenericContainer token={this.state.token} />;
     }
 
     if (this.state.isMotorist) {
-      return <PassengerWithGenericContainer token={this.state.token} />;
+      return <MotoristWithGenericContainer token={this.state.token} />;
     }
 
     return <Home handleChange={this.handleChange} />;
