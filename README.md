@@ -1,4 +1,4 @@
-# Mobile Auto Repair
+# Tilungisa Auto
 - This is a Mobile app that gives motorists access to the nearest Mechanics on the platform
 ## Tech Used
 - React Native
